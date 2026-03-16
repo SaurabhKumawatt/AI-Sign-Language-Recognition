@@ -1,0 +1,49 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Dataset files (optional)
+dataset/raw/
+dataset/images/
+*.jpg
+*.png
+*.jpeg
+
+# Model files
+model/
+*.pkl
+*.h5
+*.pt
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Temporary files
+temp/
+tmp/
+
+# MediaPipe cache
+*.pbtxt
+*.tflite
+
+# Build files
+dist/
+build/
