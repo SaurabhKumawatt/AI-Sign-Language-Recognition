@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Language Recognition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+        }
+
+        header {
+            text-align: center;
+            padding: 15px;
+            background: #1e293b;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .video-box {
+            flex: 2;
+            min-width: 300px;
+            text-align: center;
+        }
+
+        .video-box img {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            border: 3px solid #38bdf8;
+        }
+
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background: #1e293b;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            text-align: center;
+            color: #38bdf8;
+        }
+
+        .gesture-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .gesture-item {
+            background: #334155;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    🤖 AI Sign Language Recognition
+</header>
+
+<div class="container">
+
+    <!-- Video Section -->
+    <div class="video-box">
+        <img src="{{ url_for('video') }}">
+        <p>Show your hand gesture clearly</p>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>Trained Gestures</h3>
+
+        <div class="gesture-list">
+            <div class="gesture-item">Hello</div>
+            <div class="gesture-item">Thank You</div>
+            <div class="gesture-item">Sorry</div>
+            <div class="gesture-item">Please</div>
+            <div class="gesture-item">Yes</div>
+            <div class="gesture-item">No</div>
+            <div class="gesture-item">Call</div>
+            <div class="gesture-item">Good</div>
+            <div class="gesture-item">I Love You</div>
+            <div class="gesture-item">Ok</div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    Keep your hand inside the frame for best accuracy
+</div>
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+📁 sign-language-recognition
+    📄 .gitignore
+    📄 app.py
+    --- START OF app.py ---
+
+    --- END OF app.py ---
+
+    📄 collect_data.py
+    --- START OF collect_data.py ---
+import cv2
+import mediapipe as mp
+import numpy as np
+import pandas as pd
+
+gesture_name = input("Enter gesture label: ")
+
+mp_hands = mp.solutions.hands
+mp_draw = mp.solutions.drawing_utils
+
+hands = mp_hands.Hands(
+    static_image_mode=False,
+    max_num_hands=1,
+    min_detection_confidence=0.7
+)
+
+cap = cv2.VideoCapture(0)
+
+data = []
+
+print("Press 's' to save sample")
+print("Press 'q' to quit")
+
+while True:
+
+    ret, frame = cap.read()
+    frame = cv2.flip(frame,1)
+
+    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    result = hands.process(rgb)
+
+    if result.multi_hand_landmarks:
+
+        for hand_landmarks in result.multi_hand_landmarks:
+
+            mp_draw.draw_landmarks(
+                frame,
+                hand_landmarks,
+                mp_hands.HAND_CONNECTIONS
+            )
+
+            landmarks = []
+
+            for lm in hand_landmarks.landmark:
+                landmarks.append(lm.x)
+                landmarks.append(lm.y)
+                landmarks.append(lm.z)
+
+            key = cv2.waitKey(1)
+
+            if key == ord('s'):
+                landmarks.append(gesture_name)
+                data.append(landmarks)
+
+                print("Sample saved:", len(data))
+
+    cv2.putText(frame,f"Gesture: {gesture_name}",
+                (10,30),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,(0,255,0),2)
+
+    cv2.imshow("Collect Data",frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+
+cap.release()
+cv2.destroyAllWindows()
+
+df = pd.DataFrame(data)
+df.to_csv(f"dataset/{gesture_name}.csv", index=False)
+
+print("Dataset saved!")
+    --- END OF collect_data.py ---
+
+    📄 export_project.py
+    --- START OF export_project.py ---
+import os
+
+# Automatically take current folder
+PROJECT_DIR = os.getcwd()
+OUTPUT_FILE = "project_dump.txt"
+
+# File extensions to include
+CODE_EXTENSIONS = [".py", ".js", ".html", ".css", ".json", ".txt"]
+
+# Folders to ignore
+IGNORE_FOLDERS = ["venv", "node_modules", "__pycache__", ".git"]
+
+def write_structure_and_code():
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as out:
+        for root, dirs, files in os.walk(PROJECT_DIR):
+            
+            # Skip unwanted folders
+            dirs[:] = [d for d in dirs if d not in IGNORE_FOLDERS]
+
+            level = root.replace(PROJECT_DIR, '').count(os.sep)
+            indent = ' ' * 4 * level
+            out.write(f"{indent}📁 {os.path.basename(root)}\n")
+
+            sub_indent = ' ' * 4 * (level + 1)
+
+            for file in files:
+                out.write(f"{sub_indent}📄 {file}\n")
+
+                if any(file.endswith(ext) for ext in CODE_EXTENSIONS):
+                    file_path = os.path.join(root, file)
+                    
+                    try:
+                        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+                            content = f.read()
+
+                        out.write(f"{sub_indent}--- START OF {file} ---\n")
+                        out.write(content + "\n")
+                        out.write(f"{sub_indent}--- END OF {file} ---\n\n")
+
+                    except Exception as e:
+                        out.write(f"{sub_indent}[Error reading file: {e}]\n\n")
+
+if __name__ == "__main__":
+    write_structure_and_code()
+    print("✅ Done! project_dump.txt created in same folder")
+    --- END OF export_project.py ---
+
+    📄 predict.py
+    --- START OF predict.py ---
+
+    --- END OF predict.py ---
+
+    📄 project_dump.txt
+    --- START OF project_dump.txt ---
+
+    --- END OF project_dump.txt ---
+
+    📄 requirements.txt
+    --- START OF requirements.txt ---
+opencv-python
+mediapipe==0.10.9
+numpy
+scikit-learn
+flask
+pandas
+    --- END OF requirements.txt ---
+
+    📄 test_hand_detection.py
+    --- START OF test_hand_detection.py ---
+import cv2
+import mediapipe as mp
+
+mp_hands = mp.solutions.hands
+mp_draw = mp.solutions.drawing_utils
+
+hands = mp_hands.Hands(
+    static_image_mode=False,
+    max_num_hands=1,
+    min_detection_confidence=0.7
+)
+
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()
+
+    if not ret:
+        break
+
+    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    results = hands.process(rgb)
+
+    if results.multi_hand_landmarks:
+        for hand_landmarks in results.multi_hand_landmarks:
+            mp_draw.draw_landmarks(
+                frame,
+                hand_landmarks,
+                mp_hands.HAND_CONNECTIONS
+            )
+
+    cv2.imshow("Hand Detection", frame)
+
+    if cv2.waitKey(1) & 0xFF == 27:
+        break
+
+cap.release()
+cv2.destroyAllWindows()
+    --- END OF test_hand_detection.py ---
+
+    📄 train_model.py
+    --- START OF train_model.py ---
+
+    --- END OF train_model.py ---
+
+    📁 dataset
+    📁 model
+    📁 training
+    📁 utils
+    📁 webapp
