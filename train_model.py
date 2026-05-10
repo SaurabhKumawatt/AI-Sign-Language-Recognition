@@ -8,7 +8,10 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
-DATASET_PATH = "dataset"
+DATASET_PATHS = [
+    "dataset",
+    "dataset/custom"
+]
 MODEL_PATH = "model/gesture_model.pkl"
 
 X = []
@@ -16,20 +19,46 @@ y = []
 
 print("🔄 Loading dataset...")
 
-# Load all CSV files
-for file in os.listdir(DATASET_PATH):
-    if file.endswith(".csv"):
-        label = file.replace(".csv", "")
-        file_path = os.path.join(DATASET_PATH, file)
+for dataset_path in DATASET_PATHS:
 
-        df = pd.read_csv(file_path)
+    if not os.path.exists(dataset_path):
+        continue
 
-        # Drop empty rows (safety)
-        df = df.dropna()
+    for file in os.listdir(dataset_path):
 
-        for row in df.values:
-            X.append(row[:-1])  # features
-            y.append(label)     # label
+        if file.endswith(".csv"):
+
+            label = file.replace(".csv", "")
+
+            file_path = os.path.join(
+                dataset_path,
+                file
+            )
+
+            try:
+                df = pd.read_csv(file_path)
+
+            except:
+                print(f"⚠️ Skipping invalid file: {file}")
+                continue
+
+            for row in df.values:
+
+                try:
+
+                    features = row[:-1]
+
+                    # skip invalid rows
+                    if len(features) != 84:
+                        continue
+
+                    features = np.array(features, dtype=float)
+
+                    X.append(features)
+                    y.append(label)
+
+                except:
+                    continue
 
 X = np.array(X, dtype=float)
 y = np.array(y)
@@ -38,6 +67,9 @@ print(f"✅ Total samples: {len(X)}")
 print(f"✅ Total gestures: {len(set(y))}")
 
 # 🔹 Split data (VERY IMPORTANT)
+if len(X) == 0:
+    print("❌ No valid dataset found")
+    exit()
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
@@ -62,7 +94,10 @@ print(f"✅ KNN Accuracy: {knn_acc * 100:.2f}%")
 # =========================
 # 🔥 OPTION 2: Random Forest (Better)
 # =========================
-rf_model = RandomForestClassifier(n_estimators=100)
+rf_model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
 rf_model.fit(X_train, y_train)
 
 y_pred_rf = rf_model.predict(X_test)

@@ -1,127 +1,523 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Sign Language Recognition</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>AI Sign Language Recognition</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial;
-            background: #0f172a;
-            color: white;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom right, #020617, #0f172a);
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
 
         header {
-            text-align: center;
-            padding: 15px;
-            background: #1e293b;
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 10px;
-        }
-
-        .video-box {
-            flex: 2;
-            min-width: 300px;
-            text-align: center;
-        }
-
-        .video-box img {
             width: 100%;
-            max-width: 600px;
-            border-radius: 10px;
-            border: 3px solid #38bdf8;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+            padding: 14px 24px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .sidebar {
-            flex: 1;
-            min-width: 250px;
-            background: #1e293b;
-            margin: 10px;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .sidebar h3 {
-            margin-top: 0;
-            text-align: center;
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
             color: #38bdf8;
         }
 
-        .gesture-list {
+        .logo span {
+            color: white;
+        }
+
+        .status {
+            background: #22c55e;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            color: black;
+        }
+
+        /* =========================
+           MAIN LAYOUT
+        ========================= */
+
+        .container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1.6fr 0.9fr;
+
+            gap: 20px;
+
+            padding: 20px;
+
+            width: 100%;
+            max-width: 1500px;
+
+            margin: auto;
+
+            align-items: start;
+        }
+
+        /* =========================
+           VIDEO SECTION
+        ========================= */
+
+        .video-section {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 20px;
+            padding: 20px;
+
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: #38bdf8;
+        }
+
+        .video-wrapper {
+            width: 100%;
+
+            max-width: 900px;
+
+            max-height: 70vh;
+
+            margin: auto;
+
+            overflow: hidden;
+
+            border-radius: 18px;
+            border: 3px solid #38bdf8;
+
+            background: black;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-wrapper img {
+            width: 100%;
+            height: auto;
+
+            max-height: 70vh;
+
+            object-fit: fill;
+
+            display: block;
+        }
+
+        .video-info {
+            margin-top: 18px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            flex-wrap: wrap;
             gap: 10px;
         }
 
+        .tip-box {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            padding: 12px 16px;
+            border-radius: 12px;
+
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .accuracy-box {
+            background: linear-gradient(to right, #06b6d4, #3b82f6);
+            padding: 12px 20px;
+            border-radius: 12px;
+
+            font-weight: 600;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 18px;
+            padding: 20px;
+
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #38bdf8;
+
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
+        /* =========================
+           BUTTON
+        ========================= */
+
+        .train-btn {
+            width: 100%;
+
+            background: linear-gradient(to right, #22c55e, #16a34a);
+
+            border: none;
+            border-radius: 14px;
+
+            padding: 15px;
+
+            color: black;
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .train-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+        }
+
+        /* =========================
+           GESTURE GRID
+        ========================= */
+
+        .gesture-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
         .gesture-item {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            padding: 12px;
+            border-radius: 12px;
+
+            text-align: center;
+            font-weight: 500;
+
+            transition: 0.3s;
+        }
+
+        .gesture-item:hover {
             background: #334155;
-            padding: 8px;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 14px;
+            transform: scale(1.03);
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
-            color: #94a3b8;
+        /* =========================
+           HISTORY
+        ========================= */
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        /* Mobile */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
+        .history-item {
+            background: #1e293b;
+            border-left: 5px solid #38bdf8;
+
+            padding: 14px;
+            border-radius: 10px;
+
+            font-weight: 600;
+            color: #f8fafc;
+
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
             }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+            padding: 20px;
+
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 1000px) {
+
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .video-info {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .video-wrapper img {
+                max-height: 60vh;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 15px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .status {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .video-title,
+            .card-title {
+                font-size: 20px;
+            }
+
+            .gesture-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #38bdf8;
+            border-radius: 10px;
         }
     </style>
 </head>
 
 <body>
 
-<header>
-    🤖 AI Sign Language Recognition
-</header>
+    <!-- HEADER -->
+    <header>
 
-<div class="container">
-
-    <!-- Video Section -->
-    <div class="video-box">
-        <img src="{{ url_for('video') }}">
-        <p>Show your hand gesture clearly</p>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h3>Trained Gestures</h3>
-
-        <div class="gesture-list">
-            <div class="gesture-item">Hello</div>
-            <div class="gesture-item">Thank You</div>
-            <div class="gesture-item">Sorry</div>
-            <div class="gesture-item">Please</div>
-            <div class="gesture-item">Yes</div>
-            <div class="gesture-item">No</div>
-            <div class="gesture-item">Call</div>
-            <div class="gesture-item">Good</div>
-            <div class="gesture-item">I Love You</div>
-            <div class="gesture-item">Ok</div>
+        <div class="logo">
+            🤖 <span>AI Sign Language Recognition</span>
         </div>
+
+    </header>
+
+    <!-- MAIN -->
+    <div class="container">
+
+        <!-- VIDEO SECTION -->
+        <div class="video-section">
+
+            <div class="video-title">
+                Live Gesture Detection
+            </div>
+
+            <div class="video-wrapper">
+                <img src="{{ url_for('video') }}">
+            </div>
+
+            <div class="video-info">
+
+                <div class="tip-box">
+                    ✋ Keep both hands visible for best accuracy
+                </div>
+
+                <div class="accuracy-box">
+                    🚀 Real-time AI Prediction
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+
+            <!-- TRAIN -->
+            <div class="card">
+
+                <a href="/add_gesture">
+                    <button class="train-btn">
+                        ➕ Add Custom Gesture
+                    </button>
+                </a>
+
+            </div>
+
+            <!-- TRAINED GESTURES -->
+            <div class="card">
+
+                <div class="card-title">
+                    Trained Gestures
+                </div>
+
+                <div class="gesture-grid">
+
+                    {% for gesture in gestures %}
+
+                    <div class="gesture-item">
+                        {{ gesture }}
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <!-- HISTORY -->
+            <div class="card">
+
+                <div class="card-title">
+                    Recent Gestures
+                </div>
+
+                <div class="history-list" id="history-list">
+
+                    <div class="history-item">
+                        Loading...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-</div>
 
-<div class="footer">
-    Keep your hand inside the frame for best accuracy
-</div>
+    <!-- SCRIPT -->
+    <script>
+
+        async function loadHistory() {
+
+            try {
+
+                const response = await fetch('/history');
+                const data = await response.json();
+
+                let html = "";
+
+                if (data.length === 0) {
+
+                    html = `
+                        <div class="history-item">
+                            No gestures detected yet
+                        </div>
+                    `;
+
+                } else {
+
+                    data.forEach(item => {
+
+                        html += `
+                            <div class="history-item">
+                                ${item}
+                            </div>
+                        `;
+                    });
+                }
+
+                document.getElementById("history-list").innerHTML = html;
+
+            } catch (err) {
+
+                console.log(err);
+
+                document.getElementById("history-list").innerHTML = `
+                    <div class="history-item">
+                        Error loading history
+                    </div>
+                `;
+            }
+        }
+
+        setInterval(loadHistory, 1000);
+
+        loadHistory();
+
+    </script>
 
 </body>
+
 </html>

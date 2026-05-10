@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Gesture</title>
+
+    <style>
+
+        body{
+            background:#111;
+            color:white;
+            font-family:Arial;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .box{
+            background:#1e1e1e;
+            padding:30px;
+            border-radius:15px;
+            width:350px;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin-top:15px;
+            border:none;
+            border-radius:8px;
+        }
+
+        button{
+            width:100%;
+            margin-top:20px;
+            padding:12px;
+            background:#00ff88;
+            border:none;
+            border-radius:8px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="box">
+
+    <h2>Add New Gesture</h2>
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="gesture"
+            placeholder="Enter gesture name"
+            required
+        >
+
+        <button type="submit">
+            Start Training
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
